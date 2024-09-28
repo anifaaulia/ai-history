@@ -73,3 +73,48 @@ class Agents:
             llm=self.openaigpt4o
         )
         return photo
+    
+    def question_validator_agent(self):
+        vquestion = Agent(
+            role='Question Validator',
+            goal='Validate if the user question is related to history.',
+            verbose=True,
+            memory=True,
+            backstory=(
+                "As a historian and researcher, you are tasked with ensuring that "
+                "the user question is relevant to historical topics."
+            ),
+            tools=[search_tool],
+            llm=self.openaigpt4o
+        )
+        return vquestion
+
+    def location_validator_agent(self):
+        vlocation = Agent(
+            role='Location Validator',
+            goal='Validate if the user location is a real location in the world.',
+            verbose=True,
+            memory=True,
+            backstory=(
+                "As a historian and researcher, you are tasked with ensuring that "
+                "the user location is a real location in the world."
+            ),
+            tools=[search_tool],
+            llm=self.openaigpt4o
+        )
+        return vlocation
+
+    def language_validator_agent(self):
+        vlanguage = Agent(
+            role='Language Validator',
+            goal='Validate if the input language is a real language spoken in the world.',
+            verbose=True,
+            memory=True,
+            backstory=(
+                "As a linguist, your expertise lies in identifying real languages "
+                "from across the world to ensure accurate language recognition."
+            ),
+            tools=[search_tool],
+            llm=self.openaigpt4o
+        )
+        return vlanguage
