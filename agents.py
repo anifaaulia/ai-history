@@ -72,3 +72,4 @@ class Agents:
             tools=[image_search],
             llm=self.openaigpt4o
         )
+        return photo
