@@ -1,5 +1,5 @@
 import os
-import newsapi
+from newsapi import NewsApiClient
 from dotenv import load_dotenv
 from langchain_community.utilities import GoogleSerperAPIWrapper, OpenWeatherMapAPIWrapper
 
@@ -13,4 +13,4 @@ image_search = GoogleSerperAPIWrapper(type="images")
 
 weather_tool = OpenWeatherMapAPIWrapper()
 
-news_finder = newsapi.NewsApiClient(api_key=os.getenv("NEWS_API_KEY"))
+news_finder = NewsApiClient(api_key=os.getenv("NEWS_API_KEY"))
