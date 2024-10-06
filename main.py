@@ -109,22 +109,19 @@ def main():
                 researcher_crew = Crew(
                     agents=[
                             agents.master_historian_agent(),
-                            agents.researcher_historian_agent(),
-                            agents.reporter_historian_agent(),
-                            agents.photographer_historian_agent()
+                            agents.reporter_historian_agent()
                         ],
                     tasks=[
-                            tasks.historical_task(question, location, language),  
-                            tasks.weather_task(question, location, language),     
+                            tasks.historical_task(question, location, language),
                             tasks.news_task(question, location, language),
-                            tasks.photo_task(location, language)        
+                            tasks.summarize(question, location, language)
                         ],                    
                     process=Process.sequential,
                     manager_llm=openaigpt4
                 )
                 
                 crew_output = researcher_crew.kickoff()
-
+                                
                 st.markdown(f"""
                             {crew_output}
                             """)
@@ -134,8 +131,9 @@ def main():
         
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
-        else:
-            st.info("Fill out the form to ask a question.")
+            
+    else:
+        st.info("Fill out the form to ask a question.")
 
 if __name__ == "__main__":
     main()

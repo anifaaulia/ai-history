@@ -36,9 +36,6 @@ class Tasks:
                 - A summary of the event, outlining the key moments.
                 - The significant historical figures involved and their roles.
                 - How this event impacted {location} socially, politically, or economically.
-                - A discussion of the long-term consequences or influence of the event on future developments 
-                in the region or globally.
-                
                 Ensure the explanation is well-structured, easy to follow, and factually accurate.
             """,
             expected_output=f"""
@@ -58,8 +55,6 @@ class Tasks:
                 Your research should include:
                 - Temperature, precipitation, and wind conditions during the event.
                 - Any notable weather phenomena (e.g., storms, extreme temperatures, or droughts) that may have influenced the event.
-                - If available, provide insights on how the weather conditions may have affected the outcomes or decisions made during the event.
-                
                 Be sure to use reliable historical data sources and clearly explain any uncertainties in the information provided.
             """,
             expected_output=f"""
@@ -100,9 +95,34 @@ class Tasks:
                 Ensure the image is from a trustworthy source.
                 """
             ),
-            expected_output=f"put the image with url link, and the description of the image with {language} language.",
+            expected_output=f"""
+            
+            put the image with url link, and the description of the image with {language} language. 
+            - format the most 1 accurately image using markdown and put the image with st.image streamlit function.
+            
+            """,
             agent=Agents().photographer_historian_agent()
         )
         return photo
 
+    def summarize(self, question, location, language):
+        sum = Task(
+            description=f"""
+            collect all the results of the task, and organize the information 
+            in a detailed and understandable way for the general public,
+            
+            for answering this {question}, at {location}=.
+            
+            """,
+            expected_output=f"""
+            - A summary of the history, outlining the key moments.
+            - The significant historical figures involved and their roles.
+            - gave 1 most relevant article include the name of the news and the link of the article.
+            
+            The answer must be using {language} language.
+            
+            """,
+            agent=Agents().master_historian_agent()
+        )
+        return sum
     
