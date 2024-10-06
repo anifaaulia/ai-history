@@ -37,16 +37,16 @@ class Tools:
         )
         return search_tool
     
-    # def image_search(self):
-    #     try:
-    #         return Tool(
-    #             name="Image Search",
-    #             func=image_searching,
-    #             description="Useful for when you need to find images of something. Input should be a search query."
-    #         )
-    #     except Exception as e:
-    #         print(f"Error creating Image Search tool: {str(e)}")
-    #         return None
+    def image_search(self):
+        try:
+            return Tool(
+                name="Image Search",
+                func=image_searching,
+                description="Useful for when you need to find images of something. Input should be a search query."
+            )
+        except Exception as e:
+            print(f"Error creating Image Search tool: {str(e)}")
+            return None
     
     def weather_tool(self):
         weather_tool = Tool(

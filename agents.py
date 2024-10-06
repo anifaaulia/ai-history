@@ -71,24 +71,24 @@ class Agents:
             print(f"Error creating reporter_historian_agent: {str(e)}")
             return None
     
-    # def photographer_historian_agent(self):
-    #     try:
-    #         photo = Agent(
-    #             role="World Historian Photographer",
-    #             goal="""Obtain the latest images from the historical sites specified.
-    #                     Your task is to capture the latest visual insights from these significant
-    #                     locations.""",
-    #             backstory=""" As a visual storyteller, you are passionate about preserving the imagery 
-    #                         of historical landmarks. With expertise in photographic documentation,
-    #                         you use the latest image search technology to capture stunning visuals 
-    #                         from historically significant sites.""",
-    #             tools=[Tools().image_search()],
-    #             llm=self.openaigpt4o
-    #         )
-    #         return photo
-    #     except Exception as e:
-    #         print(f"Error creating photographer_historian_agent: {str(e)}")
-    #         return None
+    def photographer_historian_agent(self):
+        try:
+            photo = Agent(
+                role="World Historian Photographer",
+                goal="""Obtain the latest images from the historical sites specified.
+                        Your task is to capture the latest visual insights from these significant
+                        locations.""",
+                backstory=""" As a visual storyteller, you are passionate about preserving the imagery 
+                            of historical landmarks. With expertise in photographic documentation,
+                            you use the latest image search technology to capture stunning visuals 
+                            from historically significant sites.""",
+                tools=[Tools().image_search()],
+                llm=self.openaigpt4o
+            )
+            return photo
+        except Exception as e:
+            print(f"Error creating photographer_historian_agent: {str(e)}")
+            return None
             
     def question_validator_agent(self):
         try:

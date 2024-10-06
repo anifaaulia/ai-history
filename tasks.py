@@ -93,16 +93,16 @@ class Tasks:
         )
         return news
     
-    # def photo_task(self, location, language):
-    #     photo = Task(
-    #         description=(
-    #             f"""Search for a relevant image related to the historical event in '{location}'.
-    #             Ensure the image is from a trustworthy source.
-    #             """
-    #         ),
-    #         expected_output=f"put the image with url link, and the description of the image with {language} language.",
-    #         agent=Agents().photographer_historian_agent()
-    #     )
-    #     return photo
+    def photo_task(self, location, language):
+        photo = Task(
+            description=(
+                f"""Search for a relevant image related to the historical event in '{location}'.
+                Ensure the image is from a trustworthy source.
+                """
+            ),
+            expected_output=f"put the image with url link, and the description of the image with {language} language.",
+            agent=Agents().photographer_historian_agent()
+        )
+        return photo
 
     

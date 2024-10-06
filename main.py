@@ -111,11 +111,13 @@ def main():
                             agents.master_historian_agent(),
                             agents.researcher_historian_agent(),
                             agents.reporter_historian_agent(),
+                            agents.photographer_historian_agent()
                         ],
                     tasks=[
                             tasks.historical_task(question, location, language),  
                             tasks.weather_task(question, location, language),     
-                            tasks.news_task(question, location, language),        
+                            tasks.news_task(question, location, language),
+                            tasks.photo_task(location, language)        
                         ],                    
                     process=Process.sequential,
                     manager_llm=openaigpt4
@@ -123,19 +125,9 @@ def main():
                 
                 crew_output = researcher_crew.kickoff()
 
-                if crew_output and crew_output.tasks_output:
-                    task_outputs = crew_output.tasks_output
-                    
-                    st.markdown("### Kesimpulan dari Setiap Task:")
-                    
-                    for i, task_output in enumerate(task_outputs):
-                        if task_output.summary:
-                            st.markdown(f"#### Kesimpulan Task {i+1}:")
-                            st.markdown(task_output.summary)
-                        else:
-                            st.markdown(f"#### Task {i+1} tidak memiliki kesimpulan yang tersedia.")
-                else:
-                    st.markdown("Tidak ada hasil yang dikembalikan oleh Crew.")
+                st.markdown(f"""
+                            {crew_output}
+                            """)
             
             else:
                 st.error("Validation failed. Please check your inputs.")
