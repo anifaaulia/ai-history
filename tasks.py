@@ -3,12 +3,7 @@ from agents import Agents
 
 
 class Tasks:
-    def __init__(self, question, location, language):
-        self.question = question
-        self.location = location
-        self.language = language
-
-    def question_validate(question):
+    def question_validate(self, question):
         vquestion = Task(
             description=f"Check if the question '{question}' is related to history.",
             expected_output="Answer with 'yes' if the question is related to history, otherwise 'no'.",
@@ -16,7 +11,7 @@ class Tasks:
         )
         return vquestion
     
-    def location_validate(location):
+    def location_validate(self, location):
         vlocation = Task(
             description=f"Verify if the location '{location}' is a real-world location.",
             expected_output="Answer with 'yes' if the location is real, otherwise 'no'.",
@@ -25,7 +20,7 @@ class Tasks:
         )
         return vlocation
     
-    def language_validate(language):
+    def language_validate(self, language):
         vlanguage = Task(
             description=f"Check if the language '{language}' is a real and valid language.",
             expected_output="Answer with 'yes' if the language exists, otherwise 'no'.",
@@ -33,7 +28,7 @@ class Tasks:
         )
         return vlanguage
     
-    def historical_task(question, location):
+    def historical_task(self, question, location, language):
         historical = Task(
             description=f"""
                 Provide a detailed explanation of the historical event related to '{question}' in {location}.
@@ -47,7 +42,7 @@ class Tasks:
                 Ensure the explanation is well-structured, easy to follow, and factually accurate.
             """,
             expected_output=f"""
-                A comprehensive explanation of the historical event '{question}' in {location}, covering 
+                A comprehensive explanation of the historical event '{question}' in {location} must with {language} language, covering 
                 key facts, major figures, the event's impact on the region, and its broader historical significance.
             """,
             agent=Agents().master_historian_agent()
@@ -55,11 +50,11 @@ class Tasks:
         return historical
 
     
-    def weather_task(question, location):
+    def weather_task(self, question, location, language):
         weather = Task(
             description=f"""
                 Research the historical weather conditions during the event '{question}', focusing specifically 
-                on the location '{location}' at the time of the event.
+                on the location '{location}' at the time of the event' language.
                 Your research should include:
                 - Temperature, precipitation, and wind conditions during the event.
                 - Any notable weather phenomena (e.g., storms, extreme temperatures, or droughts) that may have influenced the event.
@@ -68,7 +63,7 @@ class Tasks:
                 Be sure to use reliable historical data sources and clearly explain any uncertainties in the information provided.
             """,
             expected_output=f"""
-                A detailed report on the historical weather conditions at {location} during the event '{question}', 
+                A detailed report on the historical weather conditions at {location} during the event '{question}' with {language} language, 
                 including temperature, precipitation, wind conditions, and any relevant anomalies or weather phenomena.
                 If applicable, explain how the weather may have impacted the event's outcomes.
             """,
@@ -77,7 +72,7 @@ class Tasks:
         return weather
 
     
-    def news_task(question, location):
+    def news_task(self, question, location, language):
         news = Task(
             description=f"""
                 Search for the latest news related to the event '{question}' in {location}.
@@ -91,27 +86,23 @@ class Tasks:
                 - Why this article is relevant to the event '{question}'.
             """,
             expected_output=f"""
-                A summary of the latest news related to the event '{question}' in {location}, 
+                A summary of the latest news related to the event '{question}' in {location} must with {language} language, 
                 including three articles with publication dates, sources, and content descriptions.
             """,
             agent=Agents().reporter_historian_agent()
         )
         return news
     
-    def photo_task(location):
-        photo = Task(
-            description=(
-                f"""Search for a relevant image related to the historical event in '{location}'.
-                Ensure the image is from a trustworthy source, is of high quality, and provides 
-                an accurate representation of the historical event or location.
-                
-                Additionally, the image should include a caption or context, such as the date 
-                it was taken or the significance of the event depicted.
-                """
-            ),
-            expected_output="A relevant high-quality image related to the historical event at the location, along with a caption or description of the context.",
-            agent=Agents().photographer_historian_agent()
-        )
-        return photo
+    # def photo_task(self, location, language):
+    #     photo = Task(
+    #         description=(
+    #             f"""Search for a relevant image related to the historical event in '{location}'.
+    #             Ensure the image is from a trustworthy source.
+    #             """
+    #         ),
+    #         expected_output=f"put the image with url link, and the description of the image with {language} language.",
+    #         agent=Agents().photographer_historian_agent()
+    #     )
+    #     return photo
 
     

@@ -1,4 +1,5 @@
 import os
+import json
 from dotenv import load_dotenv
 import streamlit as st
 from langchain_openai import ChatOpenAI
@@ -9,13 +10,13 @@ from tasks import Tasks
 load_dotenv()
 
 def main():
+    
     st.set_page_config(
         page_title="GEMA AI | HistorianGPT",
         layout="centered",
         page_icon="🗺️",
     )
     
-    # HTML/CSS Styling
     st.markdown("""
         <style>
             body {
@@ -23,7 +24,7 @@ def main():
                 
             }
             .title {
-                color: #001f3f;
+                color: #FFFFFF;
                 text-align: center;
                 font-size: 3em;
                 font-weight: bold;
@@ -55,23 +56,26 @@ def main():
     """, unsafe_allow_html=True)
 
     st.image('gema.png', width=120)
-    st.markdown('<h1 class="title">Welcome to HistorianGPT</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="subtitle">Your personal AI historian at your service.</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="title">GEMA AI | HistorianGPT</h1>', unsafe_allow_html=True)
 
     with st.form("historian_form"):
         question = st.text_input("Question", placeholder="What historical event do you want to know about?", key="question", help="Ask any historical question.")
         location = st.text_input("Location", placeholder="Enter a specific location if relevant", key="location", help="Optional location for narrowing down the historical context.")
         language = st.text_input("Language", placeholder="Enter a language for the output", key="language", help="Choose the language for the answer.")
         submit_button = st.form_submit_button(label="Ask HistorianGPT")    
+        
+    agents = Agents()
+    tasks = Tasks()
     
     if submit_button:
+        
         api_key = os.getenv("OPENAI_API_KEY")
         model_name = os.getenv("OPENAI_MODEL_NAME")
-
+        
         if not api_key or not model_name:
             st.error("API Key or Model Name missing from environment!")
             return
-
+        
         openaigpt4 = ChatOpenAI(
             model=model_name,
             temperature=0.2,
@@ -82,33 +86,64 @@ def main():
         
         try:
             validation_crew = Crew(
-                agents=[Agents().question_validator_agent(), Agents().location_validator_agent(), Agents().language_validator_agent()],
-                tasks=[Tasks().question_validate(), Tasks().location_validate(), Tasks().language_validate()],
+                agents=[
+                    agents.question_validator_agent(),
+                    agents.location_validator_agent(),
+                    agents.language_validator_agent()
+                ],
+                tasks=[
+                    tasks.question_validate(question),  
+                    tasks.location_validate(location),  
+                    tasks.language_validate(language)
+                ],
                 process=Process.sequential,
                 manager_llm=openaigpt4
             )
+
             
             validation_result = validation_crew.kickoff(inputs=inputs)
             
-            if all("yes" in result.lower() for result in validation_result):
+            if str(validation_result).lower().strip() == "yes":
                 st.success("Validation successful! Proceeding with research...")
       
                 researcher_crew = Crew(
-                    agents=[Agents().master_historian_agent(), Agents().researcher_historian_agent(), Agents().reporter_historian_agent(), Agents().photographer_historian_agent()],
-                    tasks=[Tasks().historical_task(), Tasks().weather_task(), Tasks().news_task(), Tasks().photo_task()],
+                    agents=[
+                            agents.master_historian_agent(),
+                            agents.researcher_historian_agent(),
+                            agents.reporter_historian_agent(),
+                        ],
+                    tasks=[
+                            tasks.historical_task(question, location, language),  
+                            tasks.weather_task(question, location, language),     
+                            tasks.news_task(question, location, language),        
+                        ],                    
                     process=Process.sequential,
                     manager_llm=openaigpt4
                 )
                 
-                research_result = researcher_crew.kickoff(inputs=inputs)
-                
-                for result in research_result:
-                    st.write(result)
+                crew_output = researcher_crew.kickoff()
+
+                if crew_output and crew_output.tasks_output:
+                    task_outputs = crew_output.tasks_output
+                    
+                    st.markdown("### Kesimpulan dari Setiap Task:")
+                    
+                    for i, task_output in enumerate(task_outputs):
+                        if task_output.summary:
+                            st.markdown(f"#### Kesimpulan Task {i+1}:")
+                            st.markdown(task_output.summary)
+                        else:
+                            st.markdown(f"#### Task {i+1} tidak memiliki kesimpulan yang tersedia.")
+                else:
+                    st.markdown("Tidak ada hasil yang dikembalikan oleh Crew.")
             
             else:
                 st.error("Validation failed. Please check your inputs.")
         
         except Exception as e:
-            st.error(f"Error during crew execution: {str(e)}")
-    else:
-        st.info("Fill out the form to ask a question.")
+            st.error(f"An error occurred: {str(e)}")
+        else:
+            st.info("Fill out the form to ask a question.")
+
+if __name__ == "__main__":
+    main()
