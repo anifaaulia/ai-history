@@ -88,22 +88,19 @@ class Tasks:
         )
         return news
     
-    def photo_task(self, location, language):
-        photo = Task(
+    def photo_task(location, language):
+        return Task(
             description=(
                 f"""Search for a relevant image related to the historical event in '{location}'.
                 Ensure the image is from a trustworthy source.
                 """
             ),
             expected_output=f"""
-            
-            put the image with url link, and the description of the image with {language} language. 
-            - format the most 1 accurately image using markdown and put the image with st.image streamlit function.
-            
+            Display the image using st.image() and provide the description in {language} language. 
+            The most relevant image should be shown.
             """,
             agent=Agents().photographer_historian_agent()
         )
-        return photo
 
     def summarize(self, question, location, language):
         sum = Task(

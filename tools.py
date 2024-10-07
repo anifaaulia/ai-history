@@ -24,9 +24,19 @@ def get_latest_news(query):
     return articles
 
 def image_searching(query):
-    image_search_tool = GoogleSerperAPIWrapper(api_key=os.getenv("SERPER_API_KEY") ,type="images")
-    results = image_search_tool.results(query)
-    return print(results)
+    try:
+        image_search_tool = GoogleSerperAPIWrapper(api_key=os.getenv("SERPER_API_KEY"), type="images")
+        results = image_search_tool.results(query)
+        
+        if results and len(results) > 0:
+            first_result = results[0]
+            image_url = first_result.get("image_url")
+            description = first_result.get("description", "No description available.")
+            return image_url, description
+        return None, None
+    except Exception as e:
+        print(f"Error fetching image: {str(e)}")
+        return None, None
 
 class Tools:
     def search_tool(self):
